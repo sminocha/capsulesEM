@@ -12,6 +12,7 @@ def main(_):
   NUM_STEPS_PER_EPOCH = int(
     mnist.NUM_TRAIN_EXAMPLES / FLAGS.batch_size
   )
+  initial_learning_rate = 1e-3
 
   with tf.Graph().as_default():
 
@@ -65,14 +66,27 @@ def main(_):
     # tf.summary.scalar(
     #   'losses/cross_entropy_loss', loss
     # )
-    tf.summary.scalar(
-      'losses/spread_loss', loss
-    )
+    # tf.summary.scalar(
+    #   'losses/spread_loss', loss
+    # )
 
-    # TODO: set up a learning_rate decay
-    optimizer = tf.train.AdamOptimizer(
-      learning_rate=0.001
-    )
+    # # TODO: set up a learning_rate decay
+    # optimizer = tf.train.AdamOptimizer(
+    #   learning_rate=0.001
+    # )
+
+    tf.summary.scalar('losses/spread_loss', loss)
+    tf.summary.scalar('accuracies/training_accuracy', train_accuracy)
+    
+    # exponential learning rate decay
+    learning_rate = tf.train.exponential_decay(
+      initial_learning_rate,
+      global_step,
+      decay_steps = num_steps_per_epoch,
+      decay_rate = 0.8,
+      staircase = True)
+
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
 
     # grads_and_vars = optimizer.compute_gradients(loss)
     # for (grad, var) in grads_and_vars:
