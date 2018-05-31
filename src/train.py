@@ -2,6 +2,9 @@
 
 from settings import *
 
+import capsules.core as core
+import capsules.nets as nets
+
 def main(_):
 
   tf.logging.set_verbosity(tf.logging.INFO)
@@ -19,7 +22,7 @@ def main(_):
       data_directory=FLAGS.data_dir, is_training=True, batch_size=FLAGS.batch_size
     )
 
-    poses, activations = capsules.nets.capsules_v0(
+    poses, activations = nets.capsules_v0(
       images, num_classes=10, iterations=1, name='capsulesEM-V0'
     )
     # activations = tf.Print(
@@ -43,7 +46,7 @@ def main(_):
     margin = tf.train.piecewise_constant(
       tf.cast(global_step, dtype=tf.int32),
       boundaries=[
-        int(NUM_STEPS_PER_EPOCH * margin_schedule_epoch_achieve_max * x / 7) for x in xrange(1, 8)
+        int(NUM_STEPS_PER_EPOCH * margin_schedule_epoch_achieve_max * x / 7) for x in range(1, 8)
       ],
       values=[
         x / 10.0 for x in range(2, 10)
@@ -55,7 +58,7 @@ def main(_):
     #     labels=labels, logits=activations, name='cross_entropy_loss'
     #   )
     # )
-    loss = capsules.nets.spread_loss(
+    loss = nets.spread_loss(
       labels, activations, margin=margin, name='spread_loss'
     )
 
