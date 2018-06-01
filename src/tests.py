@@ -2,6 +2,9 @@
 
 from settings import *
 
+import capsules.core as core
+import capsules.nets as nets
+
 
 def main(_):
 
@@ -29,7 +32,7 @@ def main(_):
       batch_size=FLAGS.batch_size
     )
 
-    poses, activations = capsules.nets.capsules_v0(
+    poses, activations = nets.capsules_v0(
       images, num_classes=10, iterations=1, name='capsulesEM-V0'
     )
 
