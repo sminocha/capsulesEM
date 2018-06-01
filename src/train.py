@@ -76,13 +76,13 @@ def main(_):
     # )
 
     tf.summary.scalar('losses/spread_loss', loss)
-    tf.summary.scalar('accuracies/training_accuracy', train_accuracy)
+    # tf.summary.scalar('accuracies/training_accuracy', train_accuracy)
     
     # exponential learning rate decay
     learning_rate = tf.train.exponential_decay(
       initial_learning_rate,
       global_step,
-      decay_steps = num_steps_per_epoch,
+      decay_steps = NUM_STEPS_PER_EPOCH,
       decay_rate = 0.8,
       staircase = True)
 
